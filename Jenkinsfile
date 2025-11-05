@@ -73,8 +73,7 @@ pipeline {
                     // You will provide kubeconfig as Jenkins secret file
                     withCredentials([file(credentialsId: 'kubeconfig', variable: 'KUBECONFIG_FILE')]) {
                         bat '''
-                            mkdir -p ~/.kube
-                            cp $KUBECONFIG_FILE ~/.kube/config
+                            set KUBECONFIG=%KUBECONFIG_FILE%
 
                             echo "✅ Using provided kubeconfig"
                             kubectl config current-context
