@@ -1,0 +1,12 @@
+apiVersion: v1
+data:
+  init.sql: |-
+    CREATE DATABASE IF NOT EXISTS shelfit_bookdb;
+    CREATE DATABASE IF NOT EXISTS shelfit_userdb;
+    CREATE DATABASE IF NOT EXISTS shelfit_orderdb;
+    CREATE DATABASE IF NOT EXISTS shelfit_inventorydb;
+kind: ConfigMap
+metadata:
+  labels:
+    io.kompose.service: mysql
+  name: mysql-cm1

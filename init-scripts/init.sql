@@ -1,0 +1,4 @@
+CREATE DATABASE IF NOT EXISTS shelfit_bookdb;
+CREATE DATABASE IF NOT EXISTS shelfit_userdb;
+CREATE DATABASE IF NOT EXISTS shelfit_orderdb;
+CREATE DATABASE IF NOT EXISTS shelfit_inventorydb;

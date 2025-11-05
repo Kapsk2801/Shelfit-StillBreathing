@@ -9,11 +9,12 @@ services:
     container_name: shelfit-mysql2
     environment:
       MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: shelfit_main
+#      MYSQL_DATABASE: shelfit_main
     ports:
       - "3307:3306"
     volumes:
       - mysql_data:/var/lib/mysql
+      - ./init-scripts:/docker-entrypoint-initdb.d
     networks:
       - shelfit-net
 
