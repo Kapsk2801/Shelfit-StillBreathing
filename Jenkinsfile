@@ -49,13 +49,13 @@ pipeline {
                     ]
 
                     withCredentials([usernamePassword(credentialsId: 'dockerhub', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
-                        sh 'echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin'
+                        bat 'echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin'
 
                         for (svc in services) {
                             dir(svc) {
                                 echo "🐳 Building Docker image for ${svc}..."
-                                sh "docker build -t ${DOCKER_HUB}/shelfit-${svc}:latest ."
-                                sh "docker push ${DOCKER_HUB}/shelfit-${svc}:latest"
+                                bat "docker build -t ${DOCKER_HUB}/shelfit-${svc}:latest ."
+                                bat "docker push ${DOCKER_HUB}/shelfit-${svc}:latest"
                             }
                         }
                     }
@@ -70,7 +70,7 @@ pipeline {
 
                     // You will provide kubeconfig as Jenkins secret file
                     withCredentials([file(credentialsId: 'kubeconfig', variable: 'KUBECONFIG_FILE')]) {
-                        sh '''
+                        bat '''
                             mkdir -p ~/.kube
                             cp $KUBECONFIG_FILE ~/.kube/config
 
@@ -91,7 +91,7 @@ pipeline {
 
         stage('Cleanup') {
             steps {
-                sh 'docker system prune -f'
+                bat 'docker system prune -f'
             }
         }
     }
