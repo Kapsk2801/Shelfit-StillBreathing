@@ -13,56 +13,56 @@ pipeline {
             }
         }
 
-        stage('Build JARs') {
-            steps {
-                script {
-                    def services = [
-                        "book-service",
-                        "config-server",
-                        "eureka-server",
-                        "api-gateway",
-                        "order-service",
-                        "user-service",
-                        "inventory-service"
-                    ]
-                    for (svc in services) {
-                        dir(svc) {
-                            echo "🏗 Building ${svc}..."
-                            bat "mvn clean package -DskipTests"
-                        }
-                    }
-                }
-            }
-        }
-
-        stage('Build & Push Docker Images') {
-            steps {
-                script {
-                    def services = [
-                        "book-service",
-                        "config-server",
-                        "eureka-server",
-                        "api-gateway",
-                        "order-service",
-                        "user-service",
-                        "inventory-service"
-                    ]
-
-                    withCredentials([usernamePassword(credentialsId: 'dockerhub', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
-                        // Correct Windows syntax for Docker login
-                        bat 'echo|set /p=%DOCKER_PASS% | docker login -u %DOCKER_USER% --password-stdin'
-
-                        for (svc in services) {
-                            dir(svc) {
-                                echo "🐳 Building Docker image for ${svc}..."
-                                bat "docker build -t ${DOCKER_HUB}/shelfit-${svc}:latest ."
-                                bat "docker push ${DOCKER_HUB}/shelfit-${svc}:latest"
-                            }
-                        }
-                    }
-                }
-            }
-        }
+//         stage('Build JARs') {
+//             steps {
+//                 script {
+//                     def services = [
+//                         "book-service",
+//                         "config-server",
+//                         "eureka-server",
+//                         "api-gateway",
+//                         "order-service",
+//                         "user-service",
+//                         "inventory-service"
+//                     ]
+//                     for (svc in services) {
+//                         dir(svc) {
+//                             echo "🏗 Building ${svc}..."
+//                             bat "mvn clean package -DskipTests"
+//                         }
+//                     }
+//                 }
+//             }
+//         }
+//
+//         stage('Build & Push Docker Images') {
+//             steps {
+//                 script {
+//                     def services = [
+//                         "book-service",
+//                         "config-server",
+//                         "eureka-server",
+//                         "api-gateway",
+//                         "order-service",
+//                         "user-service",
+//                         "inventory-service"
+//                     ]
+//
+//                     withCredentials([usernamePassword(credentialsId: 'dockerhub', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
+//                         // Correct Windows syntax for Docker login
+//                         bat 'echo|set /p=%DOCKER_PASS% | docker login -u %DOCKER_USER% --password-stdin'
+//
+//                         for (svc in services) {
+//                             dir(svc) {
+//                                 echo "🐳 Building Docker image for ${svc}..."
+//                                 bat "docker build -t ${DOCKER_HUB}/shelfit-${svc}:latest ."
+//                                 bat "docker push ${DOCKER_HUB}/shelfit-${svc}:latest"
+//                             }
+//                         }
+//                     }
+//                 }
+//             }
+//         }
 
 
         stage('Deploy to Kubernetes') {
