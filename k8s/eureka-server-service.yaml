@@ -8,11 +8,12 @@ metadata:
     io.kompose.service: eureka-server
   name: eureka-server
 spec:
-  type: NodePort
+#  type: NodePort
+  type: LoadBalancer
   ports:
     - name: "8761"
       port: 8761
       targetPort: 8761
-      nodePort: 30076
+#      nodePort: 30076
   selector:
     io.kompose.service: eureka-server
