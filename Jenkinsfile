@@ -79,7 +79,7 @@ pipeline {
                             kubectl config current-context
 
                             echo "🔄 Applying all manifests..."
-                            kubectl apply -f ${K8S_DIR}/
+                            kubectl apply -f k8s/
 
                             echo "✅ Checking deployment status..."
                             kubectl get pods -o wide
@@ -90,11 +90,11 @@ pipeline {
             }
         }
 
-        stage('Cleanup') {
-            steps {
-                bat 'docker system prune -f'
-            }
-        }
+//         stage('Cleanup') {
+//             steps {
+//                 bat 'docker system prune -f'
+//             }
+//         }
     }
 
     post {
