@@ -1,7 +1,25 @@
 version: '3.8'
 
 services:
+  # ===================
+  # MYSQL DATABASE
+  # ===================
+  mysql:
+    image: mysql:8.0
+    container_name: shelfit-mysql2
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: shelfit_main
+    ports:
+      - "3307:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - shelfit-net
 
+  # ===================
+  # CONFIG SERVER
+  # ===================
   config-server:
     build: ./config-server
     container_name: config-server
@@ -55,10 +73,11 @@ services:
     depends_on:
       - eureka-server
       - config-server
+      - mysql
     environment:
       - SPRING_CONFIG_IMPORT=optional:configserver:http://config-server:8888/
       - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka/
-      - SPRING_DATASOURCE_URL=jdbc:mysql://host.docker.internal:3307/shelfit_bookdb
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/shelfit_bookdb
       - SPRING_DATASOURCE_USERNAME=root
       - SPRING_DATASOURCE_PASSWORD=root
     networks:
@@ -75,10 +94,11 @@ services:
     depends_on:
       - eureka-server
       - config-server
+      - mysql
     environment:
       - SPRING_CONFIG_IMPORT=optional:configserver:http://config-server:8888/
       - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka/
-      - SPRING_DATASOURCE_URL=jdbc:mysql://host.docker.internal:3307/shelfit_userdb
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/shelfit_userdb
       - SPRING_DATASOURCE_USERNAME=root
       - SPRING_DATASOURCE_PASSWORD=root
     networks:
@@ -95,10 +115,11 @@ services:
     depends_on:
       - eureka-server
       - config-server
+      - mysql
     environment:
       - SPRING_CONFIG_IMPORT=optional:configserver:http://config-server:8888/
       - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka/
-      - SPRING_DATASOURCE_URL=jdbc:mysql://host.docker.internal:3307/shelfit_orderdb
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/shelfit_orderdb
       - SPRING_DATASOURCE_USERNAME=root
       - SPRING_DATASOURCE_PASSWORD=root
     networks:
@@ -115,15 +136,22 @@ services:
     depends_on:
       - eureka-server
       - config-server
+      - mysql
     environment:
       - SPRING_CONFIG_IMPORT=optional:configserver:http://config-server:8888/
       - EUREKA_CLIENT_SERVICEURL_DEFAULTZONE=http://eureka-server:8761/eureka/
-      - SPRING_DATASOURCE_URL=jdbc:mysql://host.docker.internal:3307/shelfit_inventorydb
+      - SPRING_DATASOURCE_URL=jdbc:mysql://mysql:3306/shelfit_inventorydb
       - SPRING_DATASOURCE_USERNAME=root
       - SPRING_DATASOURCE_PASSWORD=root
     networks:
       - shelfit-net
 
+# ===================
+# NETWORKS & VOLUMES
+# ===================
 networks:
   shelfit-net:
     driver: bridge
+
+volumes:
+  mysql_data:
