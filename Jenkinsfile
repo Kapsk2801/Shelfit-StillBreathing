@@ -49,7 +49,8 @@ pipeline {
                     ]
 
                     withCredentials([usernamePassword(credentialsId: 'dockerhub', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
-                        bat 'echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin'
+                        // Correct Windows syntax for Docker login
+                        bat 'echo|set /p=%DOCKER_PASS% | docker login -u %DOCKER_USER% --password-stdin'
 
                         for (svc in services) {
                             dir(svc) {
@@ -62,6 +63,7 @@ pipeline {
                 }
             }
         }
+
 
         stage('Deploy to Kubernetes') {
             steps {
