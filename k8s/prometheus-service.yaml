@@ -8,6 +8,7 @@ metadata:
     io.kompose.service: prometheus
   name: prometheus
 spec:
+  type: LoadBalancer
   ports:
     - name: "9091"
       port: 9091
